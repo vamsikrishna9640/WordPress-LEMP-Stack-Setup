@@ -191,7 +191,7 @@ volumes:
 
    - PHPMyAdmin: This service sets up PHPMyAdmin, which is a web-based database administration tool for MySQL. We specify a dependency on the db service since we      need to connect to the MySQL database. We expose port 8080 so that we can access PHPMyAdmin in our web browser. We also set up an environment variable to          specify the database host and root password.
 
-   - WordPress: This service sets up the WordPress container, which is where our website will run. We specify a dependency on the db service since WordPress            needs to connect to the MySQL database. We expose port 8000 so that we can access our website in our web browser.
+   - WordPress: This service sets up the WordPress container, which is where our website will run. We specify a dependency on the db service since WordPress            needs to connect to the MySQL database. We expose port 80 so that we can access our website in our web browser.
 
    - Nginx: Here is the configuration of nginx server which depends on all the above services. This server runs on 8001 of the local system and 80 of the              container.
  

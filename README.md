@@ -102,13 +102,170 @@ http{
 
  ```
  
+ ```
+ #docker-compose.yaml File
+   services:
+  #databse
+  db:
+    image: mysql:5.7
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+      MYSQL_ROOT_PASSWORD: password
+    networks:
+      - wpsite
+  #php
+  phpfpm:
+    image: php:fpm
+    depends_on:
+      - db
+    ports:
+      - '9000:9000'
+    volumes: ['./public:/usr/share/nginx/html']
+    networks:
+      - wpsite
+  #phpmyadmin
+  phpmyadmin:
+    depends_on:
+      - db
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - '8080:80'
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: password
+    networks:
+      - wpsite
+  #wordpress
+  wordpress:
+    depends_on: 
+      - db
+    image: wordpress:latest
+    restart: always
+    ports:
+      - '8000:80'
+    volumes: ['./:/var/www/html']
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    networks:
+      - wpsite
+  #nginx
+  proxy:
+    image: nginx:1.17.10
+    depends_on:
+      - db
+      - wordpress
+      - phpmyadmin
+      - phpfpm
+    ports:
+      - '8001:80'
+    volumes: 
+      - ./:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/nginx.conf
+    networks:
+      - wpsite
+networks:
+  wpsite:
+volumes:
+  db_data:
+    
+ ```
+ 
  
 
 4. The `enable_disable_site` function is used to enable or disable a WordPress site. It starts or stops the Docker containers associated with the site depending on the provided command.
+  
+  ```
+    # Function to enable/disable the site
+enable_disable_site() {
+  if [ -z "$1" ]; then
+    echo "Please provide a site name as an argument."
+    exit 1
+  fi
+
+  echo "Enabling/Disabling site: $1"
+
+  cd "$1"
+
+  if [ "$2" = "enable" ]; then
+    docker-compose start
+  elif [ "$2" = "disable" ]; then
+    docker-compose stop
+  else
+    echo "Invalid command. Usage: $0 enable|disable site_name"
+    exit 1
+  fi
+
+  echo "Site $1 has been $2d."
+}     
+  ```
+  
 
 5. The `delete_site` function deletes a WordPress site by stopping and removing the Docker containers and deleting the associated directories.
+  ```
+    # Function to delete the site
+delete_site() {
+  if [ -z "$1" ]; then
+    echo "Please provide a site name as an argument."
+    exit 1
+  fi
+
+  echo "Deleting site: $1"
+
+  cd "$1"
+
+  # Stop and remove the containers
+  docker-compose down
+
+  # Remove the site directory
+  cd ..
+  rm -rf "$1"
+
+  # Remove the /etc/hosts entry
+  echo "Removing /etc/hosts entry..."
+  sudo sed -i "/^127\.0\.0\.1[[:space:]]*$1$/d" /etc/hosts
+
+  echo "Site $1 has been deleted."
+}
+  ```
 
 6. Finally, the main script validates the command-line arguments and calls the appropriate function based on the provided command (`create`, `enable`, `disable`, or `delete`) and the site name.
+ ```
+   # Main script
+
+# Check the command-line arguments
+if [ "$#" -lt 2 ]; then
+  echo "Usage: $0 create|enable|disable|delete site_name"
+  exit 1
+fi
+
+command="$1"
+site_name="$2"
+
+case "$command" in
+  create)
+    create_wordpress_site "$site_name"
+    ;;
+  enable|disable)
+    enable_disable_site "$site_name" "$command"
+    ;;
+  delete)
+    delete_site "$site_name"
+    ;;
+  *)
+    echo "Invalid command. Usage: $0 create|enable|disable|delete site_name"
+    exit 1
+    ;;
+esac
+ ```
 
 To use this script, you can save it to a file (e.g., `wordpress.sh`), make it executable (`chmod +x wordpress.sh`), and then run it with the desired command and site name as arguments. For example:
 
@@ -132,9 +289,11 @@ To disable the site:
 ```
 ./wordpress.sh disable example.com
 ```
+This command will stop the containers for the "example.com" WordPress site.
 
 To delete the site:
 
 ```
 ./wordpress.sh delete example.com
 ```
+This command will stop and remove the containers for the "example.com" WordPress site, delete the site directory, and remove the '/etc/hosts' entry.

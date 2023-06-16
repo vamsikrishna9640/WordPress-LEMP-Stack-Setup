@@ -179,6 +179,21 @@ volumes:
     
  ```
  
+  This Docker Compose file is for setting up a WordPress website with a MySQL database, PHP, PHPMyAdmin, Nginx, and WordPress itself.
+
+  Let's go through it section by section,
+
+  - Services: This is where we define the services that we want to run as part of our application.
+
+  - Database: This service defines the MySQL database that we will be using to store our website data. We specify the version of the MySQL image we want to use,       and we also set up some environment variables to create a new database, user, and password. We also set up a volume to store the data in the /var/lib/mysql       directory. This allows us to persist our database data even if the container is destroyed. We also set the restart policy to always, which means that if the       container crashes or is stopped, it will be automatically restarted.
+
+   - PHP: This service sets up the PHP-FPM container, which is a fast and efficient way to run PHP scripts. We specify the version of the PHP-FPM image we want to      use, and we also set up a dependency on the db service, since our PHP scripts will need to connect to the MySQL database. We expose port 9000 so that other        services can communicate with PHP-FPM. We also set up a volume to mount our ./public directory into the container so that PHP scripts can be served from          there.
+
+   - PHPMyAdmin: This service sets up PHPMyAdmin, which is a web-based database administration tool for MySQL. We specify a dependency on the db service since we      need to connect to the MySQL database. We expose port 8080 so that we can access PHPMyAdmin in our web browser. We also set up an environment variable to          specify the database host and root password.
+
+   - WordPress: This service sets up the WordPress container, which is where our website will run. We specify a dependency on the db service since WordPress            needs to connect to the MySQL database. We expose port 8000 so that we can access our website in our web browser.
+
+   - Nginx: Here is the configuration of nginx server which depends on all the above services. This server runs on 8001 of the local system and 80 of the              container.
  
 
 4. The `enable_disable_site` function is used to enable or disable a WordPress site. It starts or stops the Docker containers associated with the site depending on the provided command.

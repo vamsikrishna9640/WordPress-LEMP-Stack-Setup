@@ -1,4 +1,90 @@
 # rtCamp-Assignment
+# WordPress LEMP Stack Setup
+
+This script automates the setup of a LEMP (Linux, Nginx, MySQL, PHP) stack for hosting WordPress websites using Docker and Docker Compose. It creates a basic WordPress site with Nginx as the web server, MySQL as the database server, and PHP-FPM for PHP processing. It also includes phpMyAdmin for managing the MySQL database.
+
+## Prerequisites
+
+- Linux-based operating system (tested on Ubuntu)
+
+
+## Installation
+
+1. Clone the repository to your local machine:
+
+   ```bash
+  t
+   ```
+
+2. Change into the project directory:
+
+   ```bash
+   cd wordpress-lemp-stack
+   ```
+
+3. Make the script executable:
+
+   ```bash
+   chmod +x script.sh
+   ```
+
+## Usage
+
+Run the script with the following command:
+
+```bash
+./script.sh [command] [site_name]
+```
+
+Replace `[command]` with one of the following options:
+
+- `create`: Creates a new WordPress site with the specified `[site_name]`.
+- `enable`: Enables a previously created WordPress site with the specified `[site_name]`.
+- `disable`: Disables a previously created WordPress site with the specified `[site_name]`.
+- `delete`: Deletes a previously created WordPress site with the specified `[site_name]`.
+
+Replace `[site_name]` with the desired name for your WordPress site.
+
+### Example Usage
+
+1. Create a new WordPress site:
+
+   ```bash
+   ./script.sh create mysite
+   ```
+
+   This command will create a new directory named `mysite` and set up the LEMP stack for hosting the WordPress site.
+
+2. Enable an existing WordPress site:
+
+   ```bash
+   ./script.sh enable mysite
+   ```
+
+   This command will start the containers for the `mysite` WordPress site.
+
+3. Disable an existing WordPress site:
+
+   ```bash
+   ./script.sh disable mysite
+   ```
+
+   This command will stop the containers for the `mysite` WordPress site.
+
+4. Delete an existing WordPress site:
+
+   ```bash
+   ./script.sh delete mysite
+   ```
+
+   This command will stop and remove the containers for the `mysite` WordPress site, delete the site directory, and remove the `/etc/hosts` entry.
+
+## Important Note
+
+- The script assumes that you have root privileges and will prompt for your sudo password when necessary for installation and configuration tasks.
+- Make sure to review the script and modify it according to your requirements before running it.
+- The script is provided as-is and may require adjustments based on your specific environment and preferences.
+
 
 The given script is a bash script that can be used to create, enable, disable, and delete WordPress sites using Docker and Docker Compose. Here's a breakdown of the script:
 

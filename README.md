@@ -67,7 +67,7 @@ fi
 
 3. After ensuring that Docker and Docker Compose are installed, the script defines the `create_wordpress_site` function. This function creates a WordPress site using Docker Compose. It generates a `docker-compose.yml` file with Nginx, PHP, and MySQL services configured and creates the necessary directories and configuration files.
  ```
-   # Create a LEMP stack for WordPress
+   # Function to create wordpress site
   create_wordpress_site() {
   if [ -z "$1" ]; then
     echo "Please provide a site name as an argument."

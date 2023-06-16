@@ -26,7 +26,7 @@ if ! check_package docker-compose; then
   install_package docker-compose
 fi
 
-# Create a LEMP stack for WordPress
+# Create a LEMP stack for WordPress site
 create_wordpress_site() {
   if [ -z "$1" ]; then
     echo "Please provide a site name as an argument."

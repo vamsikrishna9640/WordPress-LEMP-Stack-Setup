@@ -288,6 +288,8 @@ To use this script, you can save it to a file (e.g., `wordpress.sh`), make it ex
 ./wordpress.sh create example.com
 ```
 
+![2](https://github.com/vamsikrishna9640/rtCamp-Assignment/assets/91549516/fdd82ef1-0d2f-4277-9893-14c444e50034)
+
 This will create a new WordPress site with the name "example.com".
 ![image](https://github.com/vamsikrishna9640/rtCamp-Assignment/assets/91549516/169f0bd7-08d2-41ea-8871-3516fa7d4d66)
 

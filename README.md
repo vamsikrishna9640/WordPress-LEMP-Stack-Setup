@@ -1,4 +1,3 @@
-# rtCamp-Assignment
 # WordPress LEMP Stack Setup
 
 This script automates the setup of a LEMP (Linux, Nginx, MySQL, PHP) stack for hosting WordPress websites using Docker and Docker Compose. It creates a basic WordPress site with Nginx as the web server, MySQL as the database server, and PHP-FPM for PHP processing. It also includes phpMyAdmin for managing the MySQL database.
